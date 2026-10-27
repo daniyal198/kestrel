@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kestrel — Bomber Jackets</title>
+  <meta name="description" content="Bomber and varsity jackets in sizes M and L. Order in one tap on WhatsApp.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="#" aria-label="Kestrel home">
+        <svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true"><path d="M3 20 L16 6 L29 20 L22 17 L16 26 L10 17 Z" fill="currentColor"/></svg>
+        <span>Kestrel</span>
+      </a>
+      <nav class="main-nav" aria-label="Primary">
+        <a href="#shop" data-nav-category="jackets">Jackets</a>
+        <a href="#shop" data-nav-category="tracksuits">Tracksuits</a>
+        <a href="#shop" data-nav-category="sale">Sale</a>
+      </nav>
+      <button class="cart-button" id="cart-open" aria-label="Open cart">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M6 7h12l-1 13H7L6 7Z M9 7a3 3 0 0 1 6 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <span class="cart-count" id="cart-count">0</span>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-inner">
+        <div class="hero-copy">
+          <p class="eyebrow">Autumn / Winter 2026</p>
+          <h1>Bombers made<br>for the cold.</h1>
+          <p class="hero-sub">Faux-leather, jacquard and varsity-striped bomber jackets for the new season. Pick your size, then order in one tap on WhatsApp.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#shop" data-nav-category="jackets">Shop jackets</a>
+            <a class="btn btn-ghost" href="#shop" data-nav-category="tracksuits">Shop tracksuits</a>
+            <a class="btn btn-whatsapp" data-whatsapp-link="Hi Kestrel! I have a question about your jackets." target="_blank" rel="noopener"><span data-whatsapp-icon></span>Chat on WhatsApp</a>
+          </div>
+        </div>
+        <div class="hero-art" id="hero-art" aria-hidden="true"></div>
+      </div>
+    </section>
+
+    <section class="perks container" aria-label="Store perks">
+      <div class="perk"><strong>Order on WhatsApp</strong><span>Your cart is sent in one tap</span></div>
+      <div class="perk"><strong>Sizes M and L</strong><span>Choose yours on any product</span></div>
+      <div class="perk"><strong>Personal service</strong><span>We confirm every order with you</span></div>
+    </section>
+
+    <section class="shop container" id="shop">
+      <div class="shop-head">
+        <h2>Shop the collection</h2>
+        <p class="result-count" id="result-count"></p>
+      </div>
+
+      <div class="toolbar">
+        <div class="chips" role="tablist" aria-label="Category">
+          <button class="chip is-active" data-category="all" role="tab" aria-selected="true">All</button>
+          <button class="chip" data-category="jackets" role="tab" aria-selected="false">Jackets</button>
+          <button class="chip" data-category="tracksuits" role="tab" aria-selected="false">Tracksuits</button>
+          <button class="chip" data-category="sale" role="tab" aria-selected="false">Sale</button>
+        </div>
+        <div class="toolbar-right">
+          <label class="search">
+            <span class="sr-only">Search products</span>
+            <input type="search" id="search" placeholder="Search" autocomplete="off">
+          </label>
+          <label class="sort">
+            <span class="sr-only">Sort by</span>
+            <select id="sort">
+              <option value="featured">Featured</option>
+              <option value="price-asc">Price: low to high</option>
+              <option value="price-desc">Price: high to low</option>
+            </select>
+          </label>
+        </div>
+      </div>
+
+      <div class="grid" id="product-grid"></div>
+      <p class="empty" id="empty-state" hidden>No products match your search.</p>
+    </section>
+
+    <section class="cta-band">
+      <div class="container cta-band-inner">
+        <div>
+          <h2>Questions about fit or delivery?</h2>
+          <p>Message us on WhatsApp and we'll get back to you.</p>
+        </div>
+        <a class="btn btn-whatsapp" data-whatsapp-link="Hi Kestrel! I have a question about your jackets." target="_blank" rel="noopener"><span data-whatsapp-icon></span>Chat with us</a>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <p>&copy; 2026 Kestrel.</p>
+      <nav aria-label="Footer">
+        <a href="#shop">Shop</a>
+        <a data-whatsapp-link="" target="_blank" rel="noopener">WhatsApp: +92 323 4123244</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- Product detail -->
+  <dialog class="product-modal" id="product-modal">
+    <button class="icon-btn modal-close" id="modal-close" aria-label="Close">&times;</button>
+    <div class="modal-body" id="modal-body"></div>
+  </dialog>
+
+  <!-- Cart drawer -->
+  <div class="drawer-backdrop" id="drawer-backdrop" hidden></div>
+  <aside class="cart-drawer" id="cart-drawer" aria-label="Shopping cart" aria-hidden="true">
+    <div class="drawer-head">
+      <h2>Your cart</h2>
+      <button class="icon-btn" id="cart-close" aria-label="Close cart">&times;</button>
+    </div>
+    <ul class="cart-items" id="cart-items"></ul>
+    <div class="drawer-foot">
+      <div class="subtotal"><span>Subtotal</span><strong id="cart-subtotal">$0.00</strong></div>
+      <button class="btn btn-whatsapp btn-block" id="checkout"><span data-whatsapp-icon></span>Order on WhatsApp</button>
+      <p class="checkout-note">Opens WhatsApp with your order filled in. Just press send.</p>
+    </div>
+  </aside>
+
+  <a class="wa-float" data-whatsapp-link="Hi Kestrel! I have a question about your jackets." target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp"><span data-whatsapp-icon></span></a>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="products.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
