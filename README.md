@@ -1,4 +1,4 @@
-# Kestrel
+# Fakhir
 
 A static storefront for bomber jackets. Customers browse, pick a size and quantity, and send their order to the store on WhatsApp. Plain HTML, CSS and JavaScript — no framework, no build step, no dependencies.
 

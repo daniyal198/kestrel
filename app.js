@@ -1,13 +1,13 @@
 // Storefront behaviour: product grid, filters, product modal, cart drawer, WhatsApp ordering and toast.
 // Reads the PRODUCTS catalogue from products.js.
 
-const STORE_NAME = "Kestrel";
+const STORE_NAME = "Fakhir";
 // Orders are sent here: country code + number, digits only (wa.me format).
 const WHATSAPP_NUMBER = "923234123244";
 // Products shown in the hero, by id. Falls back to the first products with photos.
 const HERO_PRODUCT_IDS = ["copper-python-bomber", "navy-python-bomber"];
 const MAX_QTY = 10;
-const CART_STORAGE_KEY = "kestrel-cart";
+const CART_STORAGE_KEY = "fakhir-cart";
 
 const money = new Intl.NumberFormat("en-PK", { style: "currency", currency: "PKR", maximumFractionDigits: 0 });
 
