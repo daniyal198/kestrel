@@ -1,0 +1,7 @@
+# Upload only the site itself; everything else (local tool settings, env files, docs) stays private.
+/*
+!index.html
+!app.js
+!products.js
+!styles.css
+!images
