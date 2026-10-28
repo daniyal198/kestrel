@@ -1,7 +1,7 @@
 // Storefront behaviour: product grid, filters, product modal, cart drawer, WhatsApp ordering and toast.
 // Reads the PRODUCTS catalogue from products.js.
 
-const STORE_NAME = "Fakhir";
+const STORE_NAME = "Fakhir Outwears";
 // Orders are sent here: country code + number, digits only (wa.me format).
 const WHATSAPP_NUMBER = "923234123244";
 // Products shown in the hero, by id. Falls back to the first products with photos.

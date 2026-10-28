@@ -1,4 +1,4 @@
-# Fakhir
+# Fakhir Outwears
 
 A static storefront for bomber jackets. Customers browse, pick a size and quantity, and send their order to the store on WhatsApp. Plain HTML, CSS and JavaScript — no framework, no build step, no dependencies.
 
@@ -20,6 +20,7 @@ python3 -m http.server 8000
 | `index.html`       | Page layout: header, hero, perks, shop, WhatsApp band, footer, modal, cart drawer |
 | `products.js`      | The `PRODUCTS` catalogue — edit this to add or change products                   |
 | `images/products/` | Product photos (900×1200 JPEG, 3:4)                                              |
+| `favicon.svg`      | The "F" monogram, used as the browser-tab icon (the same mark is inline in the header and footer) |
 | `styles.css`       | Light-theme styles, responsive down to 360px                                     |
 | `app.js`           | Rendering, filters, product modal, cart, WhatsApp ordering and toasts            |
 

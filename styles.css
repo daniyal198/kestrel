@@ -225,17 +225,85 @@ button {
   min-height: var(--header-h);
 }
 
+/* Wordmark: the "F" seal, FAKHIR in Cinzel, OUTWEARS tracked out to the same width beneath. */
 .logo {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-size: 20px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+  gap: 11px;
+  color: var(--ink);
 }
 
-.logo svg {
-  color: var(--accent);
+.logo-mark {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  transition: transform 0.4s ease;
+}
+
+.logo:hover .logo-mark {
+  transform: rotate(-8deg);
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1;
+}
+
+.logo-name {
+  margin-right: -0.16em; /* cancel the trailing letter-spacing so the word stays centred */
+  font-family: "Cinzel", "Trajan Pro", Georgia, "Times New Roman", serif;
+  font-size: 23px;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.logo-tag {
+  display: flex;
+  align-self: stretch;
+  align-items: center;
+  gap: 6px;
+  margin-top: 5px;
+  font-size: 8.5px;
+  font-weight: 600;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Fine rules either side of OUTWEARS, stretching it to FAKHIR's width. */
+.logo-tag::before,
+.logo-tag::after {
+  content: "";
+  flex: 1;
+  min-width: 6px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.6;
+}
+
+.logo-tag::after {
+  margin-left: -0.42em; /* cancel the trailing letter-spacing so both gaps match */
+}
+
+.logo-sm {
+  gap: 9px;
+}
+
+.logo-sm .logo-mark {
+  width: 32px;
+  height: 32px;
+}
+
+.logo-sm .logo-name {
+  font-size: 18px;
+}
+
+.logo-sm .logo-tag {
+  margin-top: 4px;
+  font-size: 7px;
 }
 
 .main-nav {
@@ -839,6 +907,13 @@ button {
 
 .footer-inner p {
   margin: 0;
+}
+
+.footer-brand {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 20px;
 }
 
 .footer-inner nav {
