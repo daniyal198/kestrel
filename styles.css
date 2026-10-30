@@ -914,22 +914,78 @@ button {
   font-size: 18px;
 }
 
-/* Masonry-style columns, since quotes differ in length. */
-.reviews-grid {
-  columns: 280px 3;
-  column-gap: 20px;
+/* A single row that drifts left to right on a loop. The track holds two identical groups,
+   so sliding it by half its width lands exactly where it started. */
+.reviews-marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 4%, #000 96%, transparent);
+}
+
+.reviews-track {
+  display: flex;
+  width: max-content;
+  animation: reviews-scroll calc(var(--review-count) * 8s) linear infinite;
+}
+
+.reviews-marquee:hover .reviews-track,
+.reviews-marquee:focus-within .reviews-track {
+  animation-play-state: paused;
+}
+
+.reviews-group {
+  display: flex;
+  gap: 20px;
+  padding-right: 20px;
+}
+
+@keyframes reviews-scroll {
+  from {
+    transform: translateX(-50%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+/* No motion: a still row people can swipe or scroll through instead. */
+@media (prefers-reduced-motion: reduce) {
+  .reviews-marquee {
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .reviews-track {
+    animation: none;
+  }
+
+  .reviews-group[aria-hidden] {
+    display: none;
+  }
+
+  .review {
+    scroll-snap-align: start;
+  }
 }
 
 .review {
   display: flex;
+  flex: 0 0 320px;
   flex-direction: column;
   gap: 12px;
-  margin: 0 0 20px;
+  margin: 0;
   padding: 22px;
   background: var(--surface);
   border: 1px solid var(--line);
   border-radius: var(--radius-lg);
-  break-inside: avoid;
+}
+
+@media (max-width: 560px) {
+  .review {
+    flex-basis: 270px;
+  }
 }
 
 .review blockquote {

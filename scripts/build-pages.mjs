@@ -151,7 +151,14 @@ function reviewsHTML() {
           <span class="rating-count">from ${count}</span>
         </div>
       </div>
-      <div class="reviews-grid">${cards}
+      <!-- One scrolling row. The second copy makes the loop seamless and is hidden from screen readers. -->
+      <div class="reviews-marquee" style="--review-count: ${REVIEWS.length}">
+        <div class="reviews-track">
+          <div class="reviews-group">${cards}
+          </div>
+          <div class="reviews-group" aria-hidden="true">${cards}
+          </div>
+        </div>
       </div>
     </section>`;
 }
