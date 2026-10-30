@@ -19,9 +19,10 @@ python3 -m http.server 8000
 | ------------------ | -------------------------------------------------------------------------------- |
 | `index.html`       | Page layout: header, hero, perks, shop, WhatsApp band, footer, modal, cart drawer |
 | `products.js`      | The `PRODUCTS` catalogue — edit this to add or change products                   |
+| `reviews.js`       | Customer reviews shown on the home page and every product page (build-time only) |
 | `images/products/` | Product photos (900×1200, 3:4): `.webp` for the site, `.jpg` twins for link previews |
 | `products/<id>/`   | One page per product, **generated** by `scripts/build-pages.mjs` — don't edit by hand |
-| `scripts/build-pages.mjs` | Builds the product pages, `sitemap.xml`, `robots.txt` and the product list in `index.html` |
+| `scripts/build-pages.mjs` | Builds the product pages, `sitemap.xml`, `robots.txt`, and the structured data and reviews section in `index.html` |
 | `vercel.json`      | Trailing-slash redirects and image caching                                       |
 | `favicon.svg`      | The "F" monogram, used as the browser-tab icon (the same mark is inline in the header and footer) |
 | `styles.css`       | Light-theme styles, responsive down to 360px                                     |
@@ -64,6 +65,10 @@ Prices are in PKR.
 3. Rebuild the SEO pages: `node scripts/build-pages.mjs` (Node 18+, no install needed). Do this after **any** change to `products.js`, then commit the generated files.
 
 Category chips and nav links with no products (e.g. Tracksuits, or Sale when nothing is discounted) hide themselves. `rating` and `reviews` are optional and only shown when set; set them only from real customer reviews, because they also go into Google's structured data.
+
+## Adding a review
+
+Add an entry to `REVIEWS` in `reviews.js` (`name`, `rating` out of 5, and the customer's words exactly as sent), then run `node scripts/build-pages.mjs`. Only add real reviews you have permission to show. They're marked up as reviews of the store; Google doesn't show stars in search for reviews a business publishes about itself, but they still help shoppers on the page.
 
 ## Analytics and SEO
 

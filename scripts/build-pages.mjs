@@ -1,7 +1,7 @@
 // Builds the SEO pages from the catalogue, so each product has a real, crawlable URL:
 //   products/<id>/index.html   one page per product, with Product + Breadcrumb structured data
 //   sitemap.xml                home + every product page, with images
-//   index.html                 the product ItemList between the "generated:itemlist" markers
+//   index.html                 structured data and the reviews section, between "generated:" markers
 //
 // Run after editing products.js:  node scripts/build-pages.mjs
 // No dependencies. The live domain is read from the canonical link in index.html.
@@ -23,6 +23,7 @@ const write = (file, content) => {
 const PRODUCTS = vm.runInNewContext(`${read("products.js")}; PRODUCTS`);
 const missingPhoto = PRODUCTS.find((product) => !product.image);
 if (missingPhoto) throw new Error(`"${missingPhoto.id}" needs an image: every product page shows its photo`);
+const REVIEWS = vm.runInNewContext(`${read("reviews.js")}; REVIEWS`);
 const appJS = read("app.js");
 let indexHTML = read("index.html");
 
@@ -128,9 +129,58 @@ function relatedCardHTML(product) {
         </article>`;
 }
 
+const averageRating = REVIEWS.length
+  ? Math.round((REVIEWS.reduce((sum, review) => sum + review.rating, 0) / REVIEWS.length) * 10) / 10
+  : 0;
+
+function reviewsHTML() {
+  if (!REVIEWS.length) return "";
+  const count = `${REVIEWS.length} ${REVIEWS.length === 1 ? "review" : "reviews"}`;
+  const cards = REVIEWS.map((review) => `
+        <figure class="review">
+          <span class="stars" role="img" aria-label="${review.rating} out of 5 stars" style="--rating: ${review.rating}"></span>
+          <blockquote><p>${escapeHTML(review.text)}</p></blockquote>
+          <figcaption>${escapeHTML(review.name)}<span> · via WhatsApp</span></figcaption>
+        </figure>`).join("");
+  return `<section class="reviews container" aria-labelledby="reviews-title">
+      <div class="reviews-head">
+        <h2 id="reviews-title">What our customers say</h2>
+        <div class="rating" role="img" aria-label="Rated ${averageRating.toFixed(1)} out of 5 from ${count}">
+          <span class="stars" style="--rating: ${averageRating}"></span>
+          <span class="rating-value">${averageRating.toFixed(1)}</span>
+          <span class="rating-count">from ${count}</span>
+        </div>
+      </div>
+      <div class="reviews-grid">${cards}
+      </div>
+    </section>`;
+}
+
 // ---------- Structured data ----------
 
 const STORE_ID = `${SITE}#store`;
+
+// Merges into the ClothingStore block in index.html through the shared @id.
+function storeReviewsSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "ClothingStore",
+    "@id": STORE_ID,
+    name: STORE_NAME,
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: averageRating,
+      bestRating: 5,
+      reviewCount: REVIEWS.length,
+    },
+    review: REVIEWS.map((review) => ({
+      "@type": "Review",
+      author: { "@type": "Person", name: review.name },
+      reviewRating: { "@type": "Rating", ratingValue: review.rating, bestRating: 5 },
+      reviewBody: review.text,
+    })),
+  };
+}
 
 function productSchema(product) {
   const data = {
@@ -265,6 +315,8 @@ function productPage(product) {
       </div>
     </section>
 
+    ${reviewsHTML()}
+
     <section class="related container" aria-labelledby="related-title">
       <h2 id="related-title">More bomber jackets in Lahore</h2>
       <div class="grid">${related.map(relatedCardHTML).join("")}
@@ -325,9 +377,13 @@ const itemList = jsonLD({
     name: product.name,
   })),
 });
-const MARKERS = /(<!-- generated:itemlist -->)[\s\S]*?(<!-- \/generated:itemlist -->)/;
-if (!MARKERS.test(indexHTML)) throw new Error("index.html is missing the generated:itemlist markers");
-indexHTML = indexHTML.replace(MARKERS, `$1\n  ${itemList}\n  $2`);
+function fillMarkers(name, content) {
+  const markers = new RegExp(`(<!-- generated:${name} -->)[\\s\\S]*?(<!-- /generated:${name} -->)`);
+  if (!markers.test(indexHTML)) throw new Error(`index.html is missing the generated:${name} markers`);
+  indexHTML = indexHTML.replace(markers, (_, open, close) => `${open}\n  ${content}\n  ${close}`);
+}
+fillMarkers("structured-data", REVIEWS.length ? `${itemList}\n  ${jsonLD(storeReviewsSchema())}` : itemList);
+fillMarkers("reviews", reviewsHTML());
 write("index.html", indexHTML);
 
 const today = new Date().toISOString().slice(0, 10);
@@ -352,4 +408,4 @@ Allow: /
 Sitemap: ${absolute("/sitemap.xml")}
 `);
 
-console.log(`Built ${PRODUCTS.length} product pages, sitemap.xml, robots.txt and the index.html ItemList.`);
+console.log(`Built ${PRODUCTS.length} product pages, sitemap.xml, robots.txt, and index.html's structured data and ${REVIEWS.length} reviews.`);

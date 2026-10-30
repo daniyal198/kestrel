@@ -885,6 +885,73 @@ button {
   line-height: 1.65;
 }
 
+/* ---------- Customer reviews ---------- */
+
+.reviews {
+  padding-block: 0 64px;
+}
+
+.reviews-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 16px;
+  margin-bottom: 20px;
+}
+
+.reviews-head h2 {
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  letter-spacing: -0.02em;
+}
+
+.reviews-head .rating {
+  font-size: 15px;
+}
+
+.reviews-head .stars {
+  font-size: 18px;
+}
+
+/* Masonry-style columns, since quotes differ in length. */
+.reviews-grid {
+  columns: 280px 3;
+  column-gap: 20px;
+}
+
+.review {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0 0 20px;
+  padding: 22px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  break-inside: avoid;
+}
+
+.review blockquote {
+  margin: 0;
+}
+
+.review blockquote p {
+  margin: 0;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+.review figcaption {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.review figcaption span {
+  font-weight: 400;
+  color: var(--muted);
+}
+
 /* ---------- Product page ---------- */
 
 .breadcrumbs ol {
