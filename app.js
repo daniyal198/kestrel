@@ -66,6 +66,11 @@ function findProduct(id) {
   return PRODUCTS.find((product) => product.id === id);
 }
 
+// Each product's own page, built by scripts/build-pages.mjs.
+function productURL(product) {
+  return `/products/${product.id}/`;
+}
+
 function currentPrice(product) {
   return product.salePrice ?? product.price;
 }
@@ -227,12 +232,12 @@ function cardHTML(product) {
     : "";
   return `
     <article class="card" data-id="${product.id}">
-      <button class="card-media${photoClass(product)}" type="button" data-action="open" aria-label="View ${name}">
+      <a class="card-media${photoClass(product)}" href="${productURL(product)}" data-action="open" aria-label="View ${name}">
         ${badgeHTML(product)}
-        <span class="card-art">${productArt(product, product.colors[colorIndex][1], { lazy: true })}</span>
-      </button>
+        <span class="card-art">${productArt(product, product.colors[colorIndex][1], { alt: product.name, lazy: true })}</span>
+      </a>
       <div class="card-body">
-        <h3 class="card-title"><button class="card-link" type="button" data-action="open">${name}</button></h3>
+        <h3 class="card-title"><a class="card-link" href="${productURL(product)}" data-action="open">${name}</a></h3>
         ${priceHTML(product)}
         ${ratingHTML(product)}
         ${swatches}
@@ -318,6 +323,7 @@ function modalHTML(product) {
       ${ratingHTML(product)}
       ${priceHTML(product)}
       <p class="modal-desc">${escapeHTML(product.description)}</p>
+      <a class="modal-details" href="${productURL(product)}">View full details</a>
       <div class="option-group">
         <p class="option-label">Colour: <span class="option-color"></span></p>
         ${swatches}
@@ -519,6 +525,14 @@ function orderMessage(lines) {
 }
 
 function sendWhatsAppOrder(lines) {
+  // Vercel Analytics custom event (shown in the dashboard on Pro plans; ignored otherwise).
+  window.va?.("event", {
+    name: "WhatsApp order",
+    data: {
+      items: lines.reduce((sum, line) => sum + line.qty, 0),
+      total: lines.reduce((sum, line) => sum + currentPrice(line.product) * line.qty, 0),
+    },
+  });
   window.open(whatsappURL(orderMessage(lines)), "_blank", "noopener");
   showToast("Opening WhatsApp — just press send to place your order.");
 }
@@ -601,6 +615,9 @@ els.grid.addEventListener("click", (event) => {
   if (target.dataset.color !== undefined) {
     setCardColor(product.id, Number(target.dataset.color));
   } else if (target.dataset.action === "open") {
+    // Cards are real links to the product page (for search engines and new tabs); a plain click opens the quick view.
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+    event.preventDefault();
     openModal(product);
   } else if (target.dataset.action === "quick-add") {
     quickAdd(product);
@@ -684,3 +701,7 @@ hideEmptyCategories();
 renderHero();
 renderGrid();
 renderCart();
+
+// "Add to cart" on a product page links here as /#product-<id>.
+const linkedProduct = location.hash.startsWith("#product-") && findProduct(location.hash.slice("#product-".length));
+if (linkedProduct) openModal(linkedProduct);
